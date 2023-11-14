@@ -1,15 +1,32 @@
-import {Metadata} from "next";
+import {PostsFetch} from "@/app/blog/types";
 
+const getData = async (id: string) => { // name it as you wish
+    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+        next: {
+            revalidate: 60
+        }
+    })
+    return res.json()
+}
 
-export function generateMetadata({params: {id}}: Props) {
+export async function generateMetadata({params: {id}}: Props) {
+    const postInfo: PostsFetch = await getData(id)
     return {
-        title: id
+        title: postInfo.title
     }
 }
 
-const Post = ({params: {id}}: Props) => {
+const Post = async ({params: {id}}: Props) => {
+    const postInfo: PostsFetch = await getData(id)
+
+    if (!postInfo) return <h1>sth went wrong</h1>
+
     return (
-        <h1>Post page {id}</h1>
+        <>
+            <h1>Post page {id}</h1>
+            <h2>{postInfo.title}</h2>
+            <article>{postInfo.body}</article>
+        </>
     );
 };
 

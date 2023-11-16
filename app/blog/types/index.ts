@@ -4,3 +4,7 @@ export interface PostsFetch {
     title: string;
     body: string;
 }
+
+export interface ErrorPageInterface {
+    error: Error
+}
